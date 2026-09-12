@@ -32,6 +32,17 @@
         ? bytes : NULL;
 }
 
+- (const char *)cString {
+    /*
+     * Pre-10.4-era API: no encoding argument, resolved against the
+     * platform's default C-string encoding. Old titles like FIFA14 still
+     * call this directly (e.g. from EA's Nimble JSON), and with no
+     * override installed the guest gets objc's default forward handler,
+     * which aborts. Route through the encoding-aware shim below.
+     */
+    return [self cStringUsingEncoding:[NSString defaultCStringEncoding]];
+}
+
 - (const char *)cStringUsingEncoding:(NSStringEncoding)encoding {
     uint32_t required = LC32CopyHostStringBytes(
         self.host_self, (uint32_t)encoding, NULL, 0);
