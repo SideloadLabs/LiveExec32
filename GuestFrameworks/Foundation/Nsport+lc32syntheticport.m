@@ -1,6 +1,28 @@
 #import <Foundation/Foundation+LC32.h>
 
+@implementation NSPort (LC32SyntheticPort)
+
+/*
+ * +[NSPort port] is a generically-bridged 0-arg factory call (see
+ * generated.plist), same machinery used successfully by hundreds of other
+ * classes -- so a nil result here isn't a marshaling bug, it means the
+ * *guest* never gets far enough to hand back a real object, or the class
+ * cluster resolution for a bare NSPort factory call misbehaves for this
+ * abstract base class specifically. Overriding it directly sidesteps the
+ * generic path entirely and guarantees FIFA14's runloop keep-alive thread
+ * gets a valid, real host-backed port no matter what.
+ */
++ (NSPort *)port {
+    return [[[NSMachPort alloc] init] autorelease];
+}
+
+@end
+
 @implementation NSMachPort (LC32SyntheticPort)
+
++ (NSPort *)port {
+    return [[[NSMachPort alloc] init] autorelease];
+}
 
 /*
  * `machPort` here is a port *name* minted by LC32's own synthetic Mach
