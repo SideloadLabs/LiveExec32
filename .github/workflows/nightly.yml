@@ -76,10 +76,10 @@ jobs:
         echo "$tools_dir" >> "$GITHUB_PATH"
 
     - name: Generate guest shims
-      run: gmake -C GuestMakefile generate-shims
+      run: gmake -C GuestMakefile LC32_OBJC_TRACE=1 generate-shims
 
     - name: Build guest frameworks
-      run: gmake -C GuestMakefile
+      run: gmake -C GuestMakefile LC32_OBJC_TRACE=1
 
     - name: Assemble guest root filesystem
       run: bash GuestMakefile/pack-ramdisk.sh
